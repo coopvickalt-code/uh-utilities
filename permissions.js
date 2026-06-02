@@ -1,30 +1,41 @@
-const config = require("./config.json");
-const db = require("./database");
+const config = require("../config.json");
 
+/**
+ * Get highest role level for a member
+ * (auto-picks best role if multiple match)
+ */
 function getUserLevel(member) {
-  return new Promise((resolve) => {
-    db.get("SELECT level FROM users WHERE id=?", [member.id], (err, row) => {
-      if (row) return resolve(row.level);
+  if (!member?.roles?.cache) return 0;
 
-      let lvl = 0;
+  let level = 0;
 
-      member.roles.cache.forEach(r => {
-        const l = config.roleLevels[r.id];
-        if (l && l > lvl) lvl = l;
-      });
+  for (const role of member.roles.cache.values()) {
+    const roleLevel = config.roleLevels[role.id];
 
-      resolve(lvl);
-    });
-  });
+    if (typeof roleLevel === "number" && roleLevel > level) {
+      level = roleLevel;
+    }
+  }
+
+  return level;
 }
 
-function canUse(level, req, id) {
-  return config.developers.includes(id) || level >= req;
+/**
+ * Check permission for command
+ */
+function hasPermission(member, commandName) {
+  if (!member) return false;
+
+  // Developer override
+  if (config.developers.includes(member.id)) return true;
+
+  const userLevel = getUserLevel(member);
+  const requiredLevel = config.commandLevels[commandName] ?? 0;
+
+  return userLevel >= requiredLevel;
 }
 
-function canTarget(exec, target, id) {
-  if (config.developers.includes(id)) return false;
-  return exec > target;
-}
-
-module.exports = { getUserLevel, canUse, canTarget };
+module.exports = {
+  getUserLevel,
+  hasPermission
+};

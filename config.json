@@ -1,25 +1,32 @@
 {
   "botName": "UH Utilities",
 
-  "developers": ["YOUR_USER_ID"],
+  "developers": ["1374927219775770816"],
+
+"commandLogWebhook": "https://discord.com/api/webhooks/1511144189813850234/vunadTJ8GPEWRRuWEeABuPzUdPokKkBpOloHLwSWhLv7BrTtDDf3Cqq_9us4oOMZjLxy"
 
   "roleLevels": {
-    "ROLE1": 1,
-    "ROLE2": 2,
-    "ROLE3": 3,
-    "ROLE4": 4,
-    "ROLE5": 5,
-    "ROLE6": 6
+    "1508197349388849282": 1,
+    "1505882443352117319": 2,
+    "1508197481412825309": 3,
+    "1508154903787339846": 4,
+    "1511146689329758319": 5,
+    "1371049962309292044": 6,
+    "1464314953858285629": 6
   },
 
   "commandLevels": {
+    "staff": 5,
+    "role": 3,
+    "ban": 4,
     "kick": 2,
-    "ban": 3,
     "mute": 2,
     "unmute": 2,
+    "clear": 2,
     "purge": 2,
-    "role": 3,
-    "event": 1
+    "ticket": 0,
+    "event": 1,
+    "blacklist": 5
   },
 
   "antiNuke": {
@@ -30,15 +37,15 @@
   },
 
   "eventTemplates": {
-    "training": {
-      "title": "📘 Training",
+    "SSU": {
+      "title": "Server Start Up!",
       "desc": "**Host:** {host}\n**Co-Host:** {cohost}\n@everyone",
       "color": 3447003
     }
   },
 
   "responses": {
-    "noPerm": "❌ No permission",
-    "protected": "❌ Target protected"
+    "noPerm": "❌ You lack permission to use this command!",
+    "protected": "❌ You lack permission to use this command!"
   }
 }

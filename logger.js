@@ -1,20 +1,39 @@
-const { WebhookClient } = require("discord.js");
-require("dotenv").config();
-const db = require("./database");
+const config = require("../config.json");
 
-const hook = new WebhookClient({ url: process.env.LOG_WEBHOOK });
+async function command(interaction) {
+  const webhook = config.commandLogWebhook;
+  if (!webhook) return;
 
-function log(msg) {
-  hook.send(`📌 UH UTILITIES\n${msg}`);
+  const payload = {
+    username: "UH Utilities Logs",
+    embeds: [
+      {
+        title: "Command Used",
+        color: 0x3498db,
+        fields: [
+          {
+            name: "User",
+            value: `${interaction.user.tag} (${interaction.user.id})`
+          },
+          {
+            name: "Command",
+            value: `/${interaction.commandName}`
+          },
+          {
+            name: "Channel",
+            value: interaction.channel?.name || "Unknown"
+          }
+        ],
+        timestamp: new Date()
+      }
+    ]
+  };
+
+  await fetch(webhook, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  }).catch(() => {});
 }
 
-function audit(action, executor, target) {
-  db.run(
-    "INSERT INTO audit (action,executor,target,time) VALUES (?,?,?,?)",
-    [action, executor, target, Date.now()]
-  );
-
-  log(`🧾 ${action} | ${executor} → ${target}`);
-}
-
-module.exports = { log, audit };
+module.exports = { command };

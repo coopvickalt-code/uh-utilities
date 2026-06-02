@@ -1,42 +1,66 @@
 require("dotenv").config();
 const express = require("express");
 const { Client, GatewayIntentBits } = require("discord.js");
-
 const config = require("./config.json");
+const commands = require("./commands");
 
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers]
+  intents: [GatewayIntentBits.Guilds]
 });
 
 /* =========================
-   EXPRESS KEEP-ALIVE SERVER
+   EXPRESS KEEP ALIVE
 ========================= */
 const app = express();
 
 app.get("/", (req, res) => {
-  res.status(200).send("UH Utilities is online");
+  res.send("UH Utilities is online");
 });
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log(`[WEB] Keep-alive server running on port ${PORT}`);
+app.listen(process.env.PORT || 3000, () => {
+  console.log("[WEB] Keep-alive running");
 });
 
 /* =========================
-   DISCORD BOT
+   READY
 ========================= */
 client.once("ready", () => {
   console.log(`${config.botName} is online`);
 });
 
+/* =========================
+   INTERACTIONS
+========================= */
 client.on("interactionCreate", async (i) => {
-  if (!i.isChatInputCommand()) return;
+  try {
+    if (!i.isChatInputCommand()) return;
 
-  // TEMP TEST RESPONSE (replace with your handlers)
-  if (i.commandName === "ping") {
-    return i.reply("Pong!");
+    console.log(`[CMD] ${i.commandName}`);
+
+    const cmd = commands.find(c => c.data.name === i.commandName);
+
+    if (!cmd) {
+      return i.reply({
+        content: "❌ Command not found",
+        ephemeral: true
+      });
+    }
+
+    await cmd.execute(i, client);
+
+  } catch (err) {
+    console.error(err);
+
+    if (i.replied || i.deferred) return;
+
+    return i.reply({
+      content: "❌ Error running command",
+      ephemeral: true
+    });
   }
 });
 
+/* =========================
+   LOGIN
+========================= */
 client.login(process.env.TOKEN);
