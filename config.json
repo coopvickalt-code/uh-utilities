@@ -3,7 +3,7 @@
 
   "developers": ["1374927219775770816"],
 
-"commandLogWebhook": "https://discord.com/api/webhooks/1511144189813850234/vunadTJ8GPEWRRuWEeABuPzUdPokKkBpOloHLwSWhLv7BrTtDDf3Cqq_9us4oOMZjLxy"
+"commandLogWebhook": "https://discord.com/api/webhooks/1511144189813850234/vunadTJ8GPEWRRuWEeABuPzUdPokKkBpOloHLwSWhLv7BrTtDDf3Cqq_9us4oOMZjLxy",
 
   "roleLevels": {
     "1508197349388849282": 1,
@@ -12,7 +12,8 @@
     "1508154903787339846": 4,
     "1511146689329758319": 5,
     "1371049962309292044": 6,
-    "1464314953858285629": 6
+    "1464314953858285629": 6,
+    "1486733628309508187": 7
   },
 
   "commandLevels": {
