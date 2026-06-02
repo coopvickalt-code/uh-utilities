@@ -1,0 +1,44 @@
+{
+  "botName": "UH Utilities",
+
+  "developers": ["YOUR_USER_ID"],
+
+  "roleLevels": {
+    "ROLE1": 1,
+    "ROLE2": 2,
+    "ROLE3": 3,
+    "ROLE4": 4,
+    "ROLE5": 5,
+    "ROLE6": 6
+  },
+
+  "commandLevels": {
+    "kick": 2,
+    "ban": 3,
+    "mute": 2,
+    "unmute": 2,
+    "purge": 2,
+    "role": 3,
+    "event": 1
+  },
+
+  "antiNuke": {
+    "enabled": true,
+    "threshold": 5,
+    "timeWindowMs": 8000,
+    "whitelistLevel": 4
+  },
+
+  "eventTemplates": {
+    "training": {
+      "title": "📘 Training",
+      "desc": "**Host:** {host}\n**Co-Host:** {cohost}\n@everyone",
+      "color": 3447003
+    }
+  },
+
+  "responses": {
+    "noPerm": "❌ No permission",
+    "protected": "❌ Target protected"
+  }
+}
