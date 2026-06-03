@@ -32,6 +32,8 @@ client.once("ready", () => {
 /* =========================
    INTERACTIONS (FIXED - SINGLE HANDLER)
 ========================= */
+const logger = require("./logger");
+
 client.on("interactionCreate", async (i) => {
   if (!i.isChatInputCommand()) return;
 
@@ -47,11 +49,8 @@ client.on("interactionCreate", async (i) => {
   const start = Date.now();
 
   try {
-    console.log(`[CMD] ${i.commandName} by ${i.user.tag}`);
-
     await cmd.execute(i, client);
 
-    // ✅ SUCCESS LOG (GLOBAL)
     await logger.command({
       user: i.user,
       command: i.commandName,
@@ -64,7 +63,6 @@ client.on("interactionCreate", async (i) => {
   } catch (err) {
     console.error(err);
 
-    // ❌ ERROR LOG (GLOBAL)
     await logger.command({
       user: i.user,
       command: i.commandName,

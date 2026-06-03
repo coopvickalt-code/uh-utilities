@@ -1,5 +1,3 @@
-const fetch = require("node-fetch");
-
 async function command(data) {
   const webhook = process.env.LOG_WEBHOOK;
   if (!webhook) return console.log("No webhook set");
@@ -8,7 +6,7 @@ async function command(data) {
     username: "UH Utilities Logs",
     embeds: [
       {
-        title: `Command: ${data.command}`,
+        title: `Command: /${data.command}`,
         color: data.status === "SUCCESS" ? 0x2ecc71 : 0xe74c3c,
         fields: [
           {
@@ -37,9 +35,10 @@ async function command(data) {
     ]
   };
 
+  // add error field if needed
   if (data.error) {
     embed.embeds[0].fields.push({
-      name: "Error",
+      name: "Webhook Failed DM a developer for help! (Send a screenshot of this message.)",
       value: data.error.slice(0, 1000)
     });
   }
