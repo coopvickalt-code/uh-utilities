@@ -32,8 +32,6 @@ client.once("ready", () => {
 /* =========================
    INTERACTIONS (FIXED - SINGLE HANDLER)
 ========================= */
-const logger = require("./logger");
-
 client.on("interactionCreate", async (i) => {
   if (!i.isChatInputCommand()) return;
 
