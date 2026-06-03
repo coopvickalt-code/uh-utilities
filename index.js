@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const logger = require("./logger");
 const { Client, GatewayIntentBits } = require("discord.js");
 const config = require("./config.json");
 const commands = require("./commands");
@@ -29,34 +30,57 @@ client.once("ready", () => {
 });
 
 /* =========================
-   INTERACTIONS
+   INTERACTIONS (FIXED - SINGLE HANDLER)
 ========================= */
 client.on("interactionCreate", async (i) => {
+  if (!i.isChatInputCommand()) return;
+
+  const cmd = commands.find(c => c.data.name === i.commandName);
+
+  if (!cmd) {
+    return i.reply({
+      content: "❌ Command not found",
+      ephemeral: true
+    });
+  }
+
+  const start = Date.now();
+
   try {
-    if (!i.isChatInputCommand()) return;
-
-    console.log(`[CMD] ${i.commandName}`);
-
-    const cmd = commands.find(c => c.data.name === i.commandName);
-
-    if (!cmd) {
-      return i.reply({
-        content: "❌ Command not found",
-        ephemeral: true
-      });
-    }
+    console.log(`[CMD] ${i.commandName} by ${i.user.tag}`);
 
     await cmd.execute(i, client);
+
+    // ✅ SUCCESS LOG (GLOBAL)
+    await logger.command({
+      user: i.user,
+      command: i.commandName,
+      channel: i.channel,
+      guild: i.guild,
+      status: "SUCCESS",
+      ms: Date.now() - start
+    });
 
   } catch (err) {
     console.error(err);
 
-    if (i.replied || i.deferred) return;
-
-    return i.reply({
-      content: "❌ Error running command",
-      ephemeral: true
+    // ❌ ERROR LOG (GLOBAL)
+    await logger.command({
+      user: i.user,
+      command: i.commandName,
+      channel: i.channel,
+      guild: i.guild,
+      status: "ERROR",
+      error: err?.message || "Unknown error",
+      ms: Date.now() - start
     });
+
+    if (!i.replied) {
+      return i.reply({
+        content: "❌ Error running command",
+        ephemeral: true
+      });
+    }
   }
 });
 

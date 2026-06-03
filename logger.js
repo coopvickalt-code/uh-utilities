@@ -1,26 +1,35 @@
-require("dotenv").config();
-async function command(interaction) {
-  const webhook = process.env.LOG_WEBHOOK;
-  if (!webhook) return;
+const fetch = require("node-fetch");
 
-  const payload = {
+async function command(data) {
+  const webhook = process.env.LOG_WEBHOOK;
+  if (!webhook) return console.log("No webhook set");
+
+  const embed = {
     username: "UH Utilities Logs",
     embeds: [
       {
-        title: "Command Used",
-        color: 0x3498db,
+        title: `Command: ${data.command}`,
+        color: data.status === "SUCCESS" ? 0x2ecc71 : 0xe74c3c,
         fields: [
           {
             name: "User",
-            value: `${interaction.user.tag} (${interaction.user.id})`
+            value: `${data.user.tag} (${data.user.id})`
           },
           {
-            name: "Command",
-            value: `/${interaction.commandName}`
+            name: "Status",
+            value: data.status
           },
           {
             name: "Channel",
-            value: interaction.channel?.name || "Unknown"
+            value: data.channel?.name || "Unknown"
+          },
+          {
+            name: "Guild",
+            value: data.guild?.name || "DM"
+          },
+          {
+            name: "Execution Time",
+            value: `${data.ms}ms`
           }
         ],
         timestamp: new Date().toISOString()
@@ -28,11 +37,22 @@ async function command(interaction) {
     ]
   };
 
-  await fetch(webhook, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  }).catch(console.error);
+  if (data.error) {
+    embed.embeds[0].fields.push({
+      name: "Error",
+      value: data.error.slice(0, 1000)
+    });
+  }
+
+  try {
+    await fetch(webhook, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(embed)
+    });
+  } catch (err) {
+    console.error("Webhook failed:", err);
+  }
 }
 
 module.exports = { command };
