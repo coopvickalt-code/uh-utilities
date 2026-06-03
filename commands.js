@@ -183,7 +183,7 @@ const commands = [
     .setName("ssu")
     .setDescription("Server Start Up")
     .addStringOption(o => o.setName("host").setRequired(true))
-    .addStringOption(o => o.setName("cohost"))
+    .addStringOption(o => o.setName("cohost")),
 
   async execute(i) {
     const host = i.options.getString("host");
@@ -191,13 +191,12 @@ const commands = [
 
     await logAction(
       i,
-      `📣 **SSU LOG**\nHost: ${host}\nCoHost: ${cohost}\nBy: ${i.user.tag}\n`
+      `📣 **SSU LOG**\nHost: ${host}\nCoHost: ${cohost}\nBy: ${i.user.tag}`
     );
 
     return i.reply(
-        `🚨 Server Start Up!SU\nHost: ${host}\nCoHost: ${cohost}\n@everyone , Get ingame for a **Server Start Up!** Events will be hosted, Roleplays will be conducted! Most active participants will get a prize at the end.`
+      `🚨 Server Start Up!\nHost: ${host}\nCoHost: ${cohost}\n@everyone Get in game!`
     );
   }
 }
-
 module.exports = commands;
