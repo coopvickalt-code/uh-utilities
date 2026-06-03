@@ -1,7 +1,6 @@
-const config = require("../config.json");
-
+require("dotenv").config();
 async function command(interaction) {
-  const webhook = config.commandLogWebhook;
+  const webhook = process.env.LOG_WEBHOOK;
   if (!webhook) return;
 
   const payload = {
@@ -24,7 +23,7 @@ async function command(interaction) {
             value: interaction.channel?.name || "Unknown"
           }
         ],
-        timestamp: new Date()
+        timestamp: new Date().toISOString()
       }
     ]
   };
@@ -33,7 +32,7 @@ async function command(interaction) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
-  }).catch(() => {});
+  }).catch(console.error);
 }
 
 module.exports = { command };

@@ -1,19 +1,13 @@
 const { SlashCommandBuilder } = require("discord.js");
 const ms = require("ms");
+const logger = require("./logger");
 
 /* =========================
-   LOG FUNCTION
+   LOG WRAPPER
 ========================= */
 async function logAction(i, message) {
-  try {
-    const channel = await i.guild.channels.fetch(process.env.MOD_LOG_CHANNEL);
-    if (!channel) return;
-    channel.send(message);
-  } catch (err) {
-    console.error("Mod log failed:", err);
-  }
+  return logger.command(i, message);
 }
-
 const commands = [
 
   // 👢 KICK
@@ -184,29 +178,26 @@ const commands = [
   },
 
   // 📣 SSU
-  {
-    data: new SlashCommandBuilder()
-      .setName("ssu")
-      .setDescription("Server Start Up")
-      .addStringOption(o => o.setName("host").setRequired(true))
-      .addStringOption(o => o.setName("cohost"))
-      .addStringOption(o => o.setName("reason")),
+{
+  data: new SlashCommandBuilder()
+    .setName("ssu")
+    .setDescription("Server Start Up")
+    .addStringOption(o => o.setName("host").setRequired(true))
+    .addStringOption(o => o.setName("cohost"))
 
-    async execute(i) {
-      const host = i.options.getString("host");
-      const cohost = i.options.getString("cohost") || "None";
-      const reason = i.options.getString("reason") || "No reason provided";
+  async execute(i) {
+    const host = i.options.getString("host");
+    const cohost = i.options.getString("cohost") || "None";
 
-      await logAction(i,
-        `📣 **SSU LOG**\nHost: ${host}\nCoHost: ${cohost}\nBy: ${i.user.tag}\nReason: ${reason}`
-      );
+    await logAction(
+      i,
+      `📣 **SSU LOG**\nHost: ${host}\nCoHost: ${cohost}\nBy: ${i.user.tag}\n`
+    );
 
-      return i.reply(
-        `🚨 SSU\nHost: ${host}\nCoHost: ${cohost}\n@everyone`
-      );
-    }
+    return i.reply(
+        `🚨 Server Start Up!SU\nHost: ${host}\nCoHost: ${cohost}\n@everyone , Get ingame for a **Server Start Up!** Events will be hosted, Roleplays will be conducted! Most active participants will get a prize at the end.`
+    );
   }
-
-];
+}
 
 module.exports = commands;
